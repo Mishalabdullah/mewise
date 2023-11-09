@@ -1,13 +1,10 @@
 const http = require("http");
 const fs = require("fs");
-const sqlite3 = require("sqlite3").verbose();
-
-// Open SQLite database
-const db = new sqlite3.Database("mewise.db");
+const { registerUser, loginUser } = require("./auth");
 
 const server = http.createServer((req, res) => {
-  if (req.url === "/" && req.method === "GET") {
-    fs.readFile("./index.html", (err, data) => {
+  if (req.url === "/login" && req.method === "GET") {
+    fs.readFile("./login.html", (err, data) => {
       if (err) {
         res.writeHead(500, { "Content-Type": "text/plain" });
         res.end("Error retrieving file");
@@ -16,48 +13,28 @@ const server = http.createServer((req, res) => {
         res.end(data);
       }
     });
-  } else if (req.url === "/addquote" && req.method === "POST") {
+  } else if (req.url === "/login" && req.method === "POST") {
     let body = "";
     req.on("data", (chunk) => {
       body += chunk.toString();
     });
     req.on("end", () => {
-      const { quote, username } = JSON.parse(body);
-      db.run(
-        "INSERT INTO quotes (username, quote) VALUES (?, ?)",
-        [username, quote],
-        (err) => {
-          if (err) {
-            res.writeHead(500, { "Content-Type": "text/plain" });
-            res.end("Error adding quote");
-          } else {
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ message: "Quote added successfully" }));
-          }
-        }
-      );
+      const formData = new URLSearchParams(body);
+      const username = formData.get("username");
+      const password = formData.get("password");
+
+      loginUser(username, password);
     });
-  } else if (req.url === "/getquotes" && req.method === "POST") {
-    let body = "";
-    req.on("data", (chunk) => {
-      body += chunk.toString();
-    });
-    req.on("end", () => {
-      const { username } = JSON.parse(body);
-      db.all(
-        "SELECT quote FROM quotes WHERE username = ?",
-        [username],
-        (err, rows) => {
-          if (err) {
-            res.writeHead(500, { "Content-Type": "text/plain" });
-            res.end("Error retrieving quotes");
-          } else {
-            const quotes = rows.map((row) => row.quote);
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ quotes }));
-          }
-        }
-      );
+  } else if (req.url === "/home.html") {
+    // Serve the home.html file
+    fs.readFile("./home.html", (err, data) => {
+      if (err) {
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end("Error retrieving file");
+      } else {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.end(data);
+      }
     });
   } else {
     res.writeHead(404, { "Content-Type": "text/plain" });

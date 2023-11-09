@@ -37,10 +37,9 @@ function loginUser(username, password, callback) {
     (err, row) => {
       if (err) {
         console.error("Database error:", err);
-        callback(err, null);
+        // callback(err, null);
       } else if (!row) {
         console.log("User not found");
-        callback(null, null);
       } else {
         // Compare the hashed password
         bcrypt.compare(password, row.password, (err, res) => {
@@ -49,6 +48,7 @@ function loginUser(username, password, callback) {
             return err, null;
           } else if (res) {
             console.log("Login successful");
+            // window.location.href("./home.html");
             return null, row.username; // Return the username upon successful login
           } else {
             console.log("Incorrect password");
@@ -60,5 +60,4 @@ function loginUser(username, password, callback) {
   );
 }
 
-loginUser("user1", "password1");
 module.exports = { registerUser, loginUser };
