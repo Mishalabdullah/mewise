@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block content %}
+<div class="jumbotron">
+  <h1>Welcome to Mewise</h1>
+  <p>Your Second Brain</p>
+  {% if user.is_authenticated %}
+  <p>
+    <a class="btn btn-primary btn-lg" href="{% url 'logout' %}" role="button"
+      >Logout</a
+    >
+
+    <a class="btn btn-success btn-lg" href="{% url 'data' %}" role="button"
+      >View</a
+    >
+  </p>
+  {% else %}
+  <p>
+    <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button"
+      >Sign In</a
+    >
+    <a
+      class="btn btn-success btn-lg"
+      href="{% url 'register_user' %}"
+      role="button"
+      >Register</a
+    >
+  </p>
+  {% endif %} {% if user.is_authenticated %} {% endif %}
+</div>
+{% endblock %}

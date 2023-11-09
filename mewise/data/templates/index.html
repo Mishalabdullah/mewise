@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% block content %}
+<div>
+  <div>
+    <h2>Your References</h2>
+    <ul>
+      {% for data in all_data %}
+      <li>{{ data.title }} - {{ data.description }}</li>
+      {% empty %}
+      <li>No data available</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div>
+    <p>
+      <a class="btn btn-success btn-lg" href="{% url 'add' %}" role="button"
+        >Add +</a
+      >
+    </p>
+  </div>
+</div>
+{% endblock %}
