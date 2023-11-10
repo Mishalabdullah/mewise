@@ -1,6 +1,8 @@
-asgiref
-Django
-django-cron
-gunicorn
-packaging
-sqlparse
+asgiref==3.7.2
+config==0.5.1
+Django==4.2.7
+django-cron==0.6.0
+gunicorn==21.2.0
+packaging==23.2
+python-decouple==3.8
+sqlparse==0.4.4
