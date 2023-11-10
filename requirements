@@ -1,6 +1,0 @@
-asgiref
-Django
-django-cron
-gunicorn
-packaging
-sqlparse
